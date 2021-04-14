@@ -1,0 +1,118 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://Kos-sheet.png" type="Texture" id=1]
+[ext_resource path="res://Player.gd" type="Script" id=2]
+[ext_resource path="res://Points.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ehhh.wav" type="AudioStream" id=4]
+[ext_resource path="res://jumpies.wav" type="AudioStream" id=5]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform bool apply = true;
+uniform float amount = 1.0;
+uniform sampler2D offset_texture : hint_white;
+
+void fragment() {
+	vec4 texture_color = texture(TEXTURE, UV);
+	vec4 color = texture_color;
+	if (apply == true) {
+		float adjusted_amount = amount * texture(offset_texture, UV).r  / 100.0;
+		color.r = texture(TEXTURE, vec2(UV.x + adjusted_amount, UV.y)).r;
+		color.g = texture(TEXTURE, UV).g;
+		color.b = texture(TEXTURE, vec2(UV.x - adjusted_amount, UV.y)).b;
+	}
+	
+	COLOR = color;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/apply = false
+shader_param/amount = 1.0
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 16, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 1 )
+region = Rect2( 32, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 1 )
+region = Rect2( 48, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 1 )
+region = Rect2( 32, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 1 )
+region = Rect2( 16, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 1 )
+region = Rect2( 64, 0, 16, 16 )
+
+[sub_resource type="SpriteFrames" id=11]
+animations = [ {
+"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"loop": true,
+"name": "run",
+"speed": 10.0
+}, {
+"frames": [ SubResource( 7 ) ],
+"loop": true,
+"name": "fall",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
+"loop": false,
+"name": "jump",
+"speed": 18.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=12]
+extents = Vector2( 7.03086, 7.0303 )
+
+[sub_resource type="RectangleShape2D" id=13]
+extents = Vector2( 8.5064, 8.54766 )
+
+[node name="Player" type="KinematicBody2D"]
+script = ExtResource( 2 )
+
+[node name="Points" parent="." instance=ExtResource( 3 )]
+percent_visible = 1.0
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+material = SubResource( 2 )
+frames = SubResource( 11 )
+animation = "fall"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( 0, 0.9 )
+shape = SubResource( 12 )
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 13 )
+
+[node name="Ehh" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+
+[node name="Meep" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+volume_db = -20.0
+[connection signal="finished" from="Ehh" to="." method="_on_Ehh_finished"]

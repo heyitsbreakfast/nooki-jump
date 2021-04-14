@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://background.gd" type="Script" id=1]
+[ext_resource path="res://background-sheet.png" type="Texture" id=2]
+
+[node name="background" type="Sprite"]
+position = Vector2( 159.59, 89.9005 )
+texture = ExtResource( 2 )
+hframes = 5
+script = ExtResource( 1 )

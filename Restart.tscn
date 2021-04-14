@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://restart_button2.png" type="Texture" id=1]
+[ext_resource path="res://Restart.gd" type="Script" id=2]
+[ext_resource path="res://restart_button1.png" type="Texture" id=3]
+[ext_resource path="res://restart_button3.png" type="Texture" id=4]
+
+[node name="Restart" type="TextureButton"]
+texture_normal = ExtResource( 3 )
+texture_pressed = ExtResource( 4 )
+texture_hover = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="."]
+[connection signal="mouse_entered" from="." to="." method="_on_Restart_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_Restart_mouse_exited"]
+[connection signal="pressed" from="." to="." method="_on_Restart_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
